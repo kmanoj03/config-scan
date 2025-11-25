@@ -162,6 +162,45 @@ Documentation-friendly format for reports and PR comments.
 - `NGINX_CLIENT_MAX_BODY_SIZE` (LOW/MEDIUM) - Missing or excessive size limit
 - `NGINX_MISSING_HSTS` (MEDIUM) - Missing Strict-Transport-Security header
 
+### 🏆 Industry Standards Mapping
+
+Every security finding is mapped to recognized industry standards and frameworks for credibility and compliance tracking:
+
+- **CIS Benchmarks**: Center for Internet Security best practices for Docker, Kubernetes, and Nginx
+- **CWE (Common Weakness Enumeration)**: Standardized software weakness identifiers
+- **OWASP ASVS**: Application Security Verification Standard
+- **NSA Kubernetes Hardening**: National Security Agency's Kubernetes hardening guidance
+
+**Example Console Output:**
+```
+[HIGH] K8S_PRIVILEGED_CONTAINER [CIS 5.2.5 | CWE-250 | ASVS 9.x | NSA Kubernetes Hardening]
+```
+
+**Example JSON Output:**
+```json
+{
+  "id": "DOCKER_LATEST_TAG",
+  "severity": "HIGH",
+  "cis": "CIS Docker 4.1",
+  "cweId": "CWE-1104",
+  "owasp": "ASVS 14.2"
+}
+```
+
+**Example Markdown Output:**
+```markdown
+**Related Standards:**
+- CIS: CIS Docker 4.1
+- CWE: CWE-1104
+- OWASP: ASVS 14.2
+```
+
+This mapping helps with:
+- ✅ Compliance auditing and reporting
+- ✅ Risk communication to stakeholders
+- ✅ Integration with vulnerability management systems
+- ✅ Academic and industry credibility
+
 ## Risk Scoring
 
 Scores are calculated by summing individual finding severities:

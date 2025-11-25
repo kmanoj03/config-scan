@@ -16,6 +16,11 @@ export interface RuleFinding {
   description: string;
   recommendation: string;
   lineHint?: number;
+  // Industry standards mappings (optional)
+  cis?: string;           // CIS Benchmark reference
+  cweId?: string;         // Common Weakness Enumeration
+  owasp?: string;         // OWASP ASVS mapping
+  nsa?: string;           // NSA hardening guide reference
 }
 
 export type Rule = (ctx: RuleContext) => RuleFinding[];

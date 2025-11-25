@@ -20,7 +20,15 @@ export function printConsole(report: ScanReport): void {
     console.log(`  Findings: ${file.findings.length}`);
 
     for (const finding of file.findings) {
-      console.log(`    - [${finding.severity}] ${finding.id}: ${finding.description}`);
+      // Build standards reference inline
+      const standards: string[] = [];
+      if (finding.cis) standards.push(finding.cis);
+      if (finding.cweId) standards.push(finding.cweId);
+      if (finding.owasp) standards.push(finding.owasp);
+      if (finding.nsa) standards.push(finding.nsa);
+      const standardsStr = standards.length > 0 ? ` [${standards.join(' | ')}]` : '';
+      
+      console.log(`    - [${finding.severity}] ${finding.id}${standardsStr}: ${finding.description}`);
       if (finding.lineHint !== undefined) {
         console.log(`      Line: ${finding.lineHint}`);
       }
@@ -65,6 +73,17 @@ export async function writeMarkdown(report: ScanReport, outPath: string): Promis
       lines.push(`- **[${finding.severity}] ${finding.id}${lineInfo}**  `);
       lines.push(`  Description: ${finding.description}  `);
       lines.push(`  Recommendation: ${finding.recommendation}`);
+      
+      // Add standards mapping if present
+      const hasStandards = finding.cis || finding.cweId || finding.owasp || finding.nsa;
+      if (hasStandards) {
+        lines.push(`  **Related Standards:**`);
+        if (finding.cis) lines.push(`  - CIS: ${finding.cis}`);
+        if (finding.cweId) lines.push(`  - CWE: ${finding.cweId}`);
+        if (finding.owasp) lines.push(`  - OWASP: ${finding.owasp}`);
+        if (finding.nsa) lines.push(`  - NSA: ${finding.nsa}`);
+      }
+      
       lines.push('');
     }
   }

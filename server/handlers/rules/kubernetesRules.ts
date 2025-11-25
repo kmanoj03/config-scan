@@ -11,6 +11,10 @@ const checkPrivilegedContainer: Rule = (ctx) => {
       severity: 'HIGH',
       description: 'One or more containers are running in privileged mode.',
       recommendation: 'Avoid privileged containers; use fine-grained capabilities instead.',
+      cis: 'CIS 5.2.5',
+      cweId: 'CWE-250',
+      owasp: 'ASVS 9.x',
+      nsa: 'NSA Kubernetes Hardening',
     });
   }
 
@@ -28,6 +32,9 @@ const checkRunAsRoot: Rule = (ctx) => {
       severity: 'HIGH',
       description: 'Container is configured to run as root user.',
       recommendation: 'Set runAsNonRoot: true and specify a non-zero runAsUser to improve security.',
+      cis: 'CIS 5.2.6',
+      cweId: 'CWE-250',
+      nsa: 'NSA Kubernetes Hardening',
     });
   }
 
@@ -45,6 +52,8 @@ const checkMissingSecurityContext: Rule = (ctx) => {
       severity: 'MEDIUM',
       description: 'No securityContext defined for Pod or containers.',
       recommendation: 'Add securityContext to enforce security policies like runAsNonRoot, capabilities, etc.',
+      cis: 'CIS 5.2',
+      nsa: 'NSA Kubernetes Hardening',
     });
   }
 
@@ -62,6 +71,8 @@ const checkMissingResources: Rule = (ctx) => {
       severity: 'MEDIUM',
       description: 'No resource requests/limits configured for Pods/containers.',
       recommendation: 'Set CPU and memory requests/limits to ensure fair scheduling and prevent noisy-neighbor issues.',
+      cis: 'CIS 5.4',
+      owasp: 'ASVS 9.2',
     });
   }
 
@@ -82,6 +93,7 @@ const checkMissingProbes: Rule = (ctx) => {
       severity: 'MEDIUM',
       description: 'No liveness or readiness probes configured.',
       recommendation: 'Add probes to enable automatic health checks and recovery.',
+      owasp: 'ASVS 9.1',
     });
   }
 
@@ -99,6 +111,9 @@ const checkHostPathVolume: Rule = (ctx) => {
       severity: 'HIGH',
       description: 'hostPath volume detected, which exposes host filesystem to the pod.',
       recommendation: 'Avoid hostPath volumes; use persistent volumes, configMaps, or secrets instead.',
+      cis: 'CIS 5.2.8',
+      cweId: 'CWE-552',
+      nsa: 'NSA Kubernetes Hardening',
     });
   }
 
@@ -116,6 +131,10 @@ const checkHostNetworkTrue: Rule = (ctx) => {
       severity: 'HIGH',
       description: 'Pod is configured with hostNetwork: true, sharing the host network namespace.',
       recommendation: 'Avoid hostNetwork unless absolutely necessary; it reduces isolation.',
+      cis: 'CIS 5.3.2',
+      cweId: 'CWE-284',
+      owasp: 'ASVS 8.2',
+      nsa: 'NSA Kubernetes Hardening',
     });
   }
 
@@ -137,6 +156,8 @@ const checkImageLatestTag: Rule = (ctx) => {
         description: "Container image uses the 'latest' tag.",
         recommendation: "Pin specific image versions instead of 'latest' to ensure consistency.",
         lineHint: i + 1,
+        cis: 'CIS 3.4.1',
+        cweId: 'CWE-1104',
       });
     }
   }
@@ -158,6 +179,8 @@ const checkMissingReadOnlyRootFs: Rule = (ctx) => {
       severity: 'MEDIUM',
       description: 'securityContext is present but readOnlyRootFilesystem is not set to true.',
       recommendation: 'Set readOnlyRootFilesystem: true to make the container filesystem immutable.',
+      cis: 'CIS 5.2.6',
+      cweId: 'CWE-668',
     });
   }
 

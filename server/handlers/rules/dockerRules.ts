@@ -16,6 +16,9 @@ const checkLatestTag: Rule = (ctx) => {
         description: "Docker image uses the 'latest' tag.",
         recommendation: "Pin a specific version tag instead of 'latest' to ensure reproducible builds.",
         lineHint: i + 1,
+        cis: 'CIS Docker 4.1',
+        cweId: 'CWE-1104',
+        owasp: 'ASVS 14.2',
       });
     }
   }
@@ -39,6 +42,9 @@ const checkMissingUser: Rule = (ctx) => {
       severity: 'MEDIUM',
       description: 'Dockerfile does not specify a USER and will run as root by default.',
       recommendation: 'Add a non-root USER to reduce the impact of a container compromise.',
+      cis: 'CIS Docker 4.5',
+      cweId: 'CWE-250',
+      owasp: 'ASVS 1.8',
     });
   }
 
@@ -61,6 +67,8 @@ const checkMissingHealthcheck: Rule = (ctx) => {
       severity: 'MEDIUM',
       description: 'Dockerfile does not include a HEALTHCHECK instruction.',
       recommendation: 'Add a HEALTHCHECK to enable container health monitoring and automatic recovery.',
+      cis: 'CIS Docker 4.6',
+      owasp: 'ASVS 9.1',
     });
   }
 
@@ -83,6 +91,9 @@ const checkExposeSSH: Rule = (ctx) => {
         description: 'Dockerfile exposes SSH port 22.',
         recommendation: 'Avoid running SSH in containers. Use docker exec for debugging or proper orchestration tools.',
         lineHint: i + 1,
+        cis: 'CIS Docker 1.1.1',
+        cweId: 'CWE-284',
+        owasp: 'ASVS 9.1',
       });
     }
   }
@@ -106,6 +117,8 @@ const checkCopyDotDot: Rule = (ctx) => {
         description: 'Dockerfile uses COPY . . which may include sensitive files.',
         recommendation: 'Use specific COPY paths or a .dockerignore file to avoid copying secrets, .git, or build artifacts.',
         lineHint: i + 1,
+        cis: 'CIS Docker 1.1.1',
+        cweId: 'CWE-552',
       });
     }
   }
@@ -127,6 +140,7 @@ const checkNoCmdOrEntrypoint: Rule = (ctx) => {
       severity: 'LOW',
       description: 'Dockerfile does not specify CMD or ENTRYPOINT.',
       recommendation: 'Add CMD or ENTRYPOINT to define the container default behavior.',
+      cis: 'CIS Docker 4.7',
     });
   }
 
@@ -162,6 +176,8 @@ const checkBadBaseImage: Rule = (ctx) => {
             description: `Dockerfile uses an outdated or unsupported base image containing '${pattern}'.`,
             recommendation: 'Update to a supported base image version to receive security patches.',
             lineHint: i + 1,
+            owasp: 'ASVS 14.2',
+            cweId: 'CWE-1395',
           });
           break;
         }
@@ -197,6 +213,7 @@ const checkPackageInstallNoCleanup: Rule = (ctx) => {
         description: 'Package installation without cleanup increases image size.',
         recommendation: 'Add cleanup commands (e.g., rm -rf /var/lib/apt/lists/* for apt, yum clean all, or use apk add --no-cache).',
         lineHint: i + 1,
+        cis: 'CIS Docker 4.9',
       });
     }
   }
