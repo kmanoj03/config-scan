@@ -1,0 +1,5 @@
+FROM node:18-bullseye:latest
+WORKDIR /app
+COPY . .
+# No USER specified → should trigger "missing USER"
+CMD ["node", "server.js"]
