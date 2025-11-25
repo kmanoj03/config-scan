@@ -53,7 +53,7 @@ export default function FileCard({ file, isSelected, onClick, isDarkMode }: File
         <div className="flex items-start justify-between gap-3">
           <div className="flex-1 min-w-0">
             <h3
-              className={`text-sm font-mono transition-colors truncate ${
+              className={`text-base font-mono transition-colors truncate ${
                 isDarkMode 
                   ? 'text-slate-300 group-hover:text-white' 
                   : 'text-gray-700 group-hover:text-gray-900'
@@ -63,39 +63,39 @@ export default function FileCard({ file, isSelected, onClick, isDarkMode }: File
               {truncatePath(file.path)}
             </h3>
           </div>
-          <span className="text-2xl flex-shrink-0">{configIcons[file.configType]}</span>
+          <span className="text-3xl flex-shrink-0">{configIcons[file.configType]}</span>
         </div>
 
         {/* Risk Badge + Score */}
         <div className="flex items-center justify-between gap-3">
-          <SeverityBadge severity={file.overallRisk} size="sm" isDarkMode={isDarkMode} />
+          <SeverityBadge severity={file.overallRisk} size="md" isDarkMode={isDarkMode} />
           <div className="text-right">
-            <div className={`text-xs uppercase tracking-wider ${
+            <div className={`text-sm uppercase tracking-wider font-medium ${
               isDarkMode ? 'text-slate-500' : 'text-gray-600'
             }`}>
               Score
             </div>
-            <div className={`text-lg font-bold ${isDarkMode ? 'text-slate-200' : 'text-gray-900'}`}>
+            <div className={`text-2xl font-bold ${isDarkMode ? 'text-slate-200' : 'text-gray-900'}`}>
               {file.overallScore}
             </div>
           </div>
         </div>
 
         {/* Findings Count */}
-        <div className={`flex items-center justify-between text-xs pt-2 border-t ${
+        <div className={`flex items-center justify-between text-sm pt-2 border-t ${
           isDarkMode 
             ? 'text-slate-400 border-slate-800' 
             : 'text-gray-600 border-gray-300'
         }`}>
           <span className="flex items-center gap-1">
-            <span className="text-amber-500">⚠️</span>
+            <span className="text-amber-500 text-base">⚠️</span>
             {file.findings.length} finding{file.findings.length !== 1 ? 's' : ''}
           </span>
           {file.insight && (
             <span className={`flex items-center gap-1 ${
               isDarkMode ? 'text-cyan-400' : 'text-cyan-600'
             }`}>
-              <span>✨</span>
+              <span className="text-base">✨</span>
               AI insights
             </span>
           )}

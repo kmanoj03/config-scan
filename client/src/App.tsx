@@ -3,7 +3,7 @@ import type { ScanReportWithInsights, FileWithInsight, Severity, ConfigType } fr
 import Sidebar from './components/Sidebar';
 import FiltersBar from './components/FiltersBar';
 import FileCard from './components/FileCard';
-import InsightsPanel from './components/InsightsPanel';
+import InsightsModal from './components/InsightsModal';
 
 export default function App() {
   const [report, setReport] = useState<ScanReportWithInsights | null>(null);
@@ -216,7 +216,7 @@ export default function App() {
               </div>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
               {filteredFiles.map((file) => (
                 <FileCard
                   key={file.path}
@@ -231,24 +231,12 @@ export default function App() {
         </div>
       </main>
 
-      {/* Right Panel: Insights */}
-      <aside className={`w-96 border-l overflow-hidden ${
-        isDarkMode ? 'border-slate-800 bg-slate-950' : 'border-gray-200 bg-white'
-      }`}>
-        <div className="h-full flex flex-col">
-          <div className={`p-6 border-b ${
-            isDarkMode ? 'border-slate-800' : 'border-gray-200'
-          }`}>
-            <h2 className={`text-lg font-semibold flex items-center gap-2 ${
-              isDarkMode ? 'text-slate-200' : 'text-gray-900'
-            }`}>
-              <span>✨</span>
-              AI Insights
-            </h2>
-          </div>
-          <InsightsPanel selectedFile={selectedFile} isDarkMode={isDarkMode} />
-        </div>
-      </aside>
+      {/* Insights Modal */}
+      <InsightsModal
+        selectedFile={selectedFile}
+        onClose={() => setSelectedFilePath(null)}
+        isDarkMode={isDarkMode}
+      />
     </div>
   );
 }

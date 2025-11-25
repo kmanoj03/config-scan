@@ -11,10 +11,10 @@ function AISummaryCollapsible({ summary, isDarkMode }: { summary: string; isDark
 
   return (
     <div className="space-y-3">
-      <h2 className={`text-sm font-semibold uppercase tracking-wider flex items-center gap-2 ${
+      <h2 className={`text-base font-semibold uppercase tracking-wider flex items-center gap-2 ${
         isDarkMode ? 'text-cyan-400' : 'text-cyan-600'
       }`}>
-        <span>🤖</span>
+        <span className="text-xl">🤖</span>
         AI Overview
       </h2>
       <div className={`p-4 rounded-lg border ${
@@ -22,7 +22,7 @@ function AISummaryCollapsible({ summary, isDarkMode }: { summary: string; isDark
           ? 'bg-gradient-to-br from-slate-900 to-slate-800 border-slate-700' 
           : 'bg-gradient-to-br from-gray-50 to-gray-100 border-gray-300'
       }`}>
-        <p className={`text-xs leading-relaxed whitespace-pre-line ${
+        <p className={`text-sm leading-relaxed whitespace-pre-line ${
           isDarkMode ? 'text-slate-300' : 'text-gray-700'
         }`}>
           {displayText}
@@ -30,7 +30,7 @@ function AISummaryCollapsible({ summary, isDarkMode }: { summary: string; isDark
         {needsTruncation && (
           <button
             onClick={() => setIsExpanded(!isExpanded)}
-            className={`mt-2 text-xs font-medium transition-colors ${
+            className={`mt-2 text-sm font-medium transition-colors ${
               isDarkMode 
                 ? 'text-cyan-400 hover:text-cyan-300' 
                 : 'text-cyan-600 hover:text-cyan-700'
@@ -99,16 +99,16 @@ export default function Sidebar({
       {/* Header */}
       <div className={`p-6 border-b ${borderClass}`}>
         <div className="flex items-center gap-3 mb-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500 to-purple-500 
-                        flex items-center justify-center text-xl shadow-lg shadow-cyan-500/20">
+          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-cyan-500 to-purple-500 
+                        flex items-center justify-center text-2xl shadow-lg shadow-cyan-500/20">
             🛡️
           </div>
           <div>
-            <h1 className="text-xl font-bold bg-gradient-to-r from-cyan-400 to-purple-400 
+            <h1 className="text-2xl font-bold bg-gradient-to-r from-cyan-400 to-purple-400 
                          bg-clip-text text-transparent">
               Config Scan
             </h1>
-            <p className={`text-xs ${isDarkMode ? 'text-slate-500' : 'text-gray-500'}`}>
+            <p className={`text-sm ${isDarkMode ? 'text-slate-500' : 'text-gray-500'}`}>
               Security Dashboard
             </p>
           </div>
@@ -119,10 +119,10 @@ export default function Sidebar({
             ? 'bg-slate-900/50 border-slate-800' 
             : 'bg-gray-100 border-gray-300'
         }`}>
-          <div className={`text-xs mb-1 ${isDarkMode ? 'text-slate-500' : 'text-gray-600'}`}>
+          <div className={`text-sm mb-1 ${isDarkMode ? 'text-slate-500' : 'text-gray-600'}`}>
             Scanned At
           </div>
-          <div className={`text-xs font-mono ${isDarkMode ? 'text-slate-300' : 'text-gray-900'}`}>
+          <div className={`text-sm font-mono ${isDarkMode ? 'text-slate-300' : 'text-gray-900'}`}>
             {new Date(report.scannedAt).toLocaleString()}
           </div>
         </div>
@@ -138,7 +138,7 @@ export default function Sidebar({
 
           {/* Stats */}
           <div className="space-y-3">
-            <h2 className={`text-sm font-semibold uppercase tracking-wider ${
+            <h2 className={`text-base font-semibold uppercase tracking-wider ${
               isDarkMode ? 'text-slate-400' : 'text-gray-600'
             }`}>
               Statistics
@@ -149,10 +149,10 @@ export default function Sidebar({
                   ? 'bg-slate-900/50 border-slate-800' 
                   : 'bg-gray-100 border-gray-300'
               }`}>
-                <span className={`text-xs ${isDarkMode ? 'text-slate-400' : 'text-gray-600'}`}>
+                <span className={`text-sm ${isDarkMode ? 'text-slate-400' : 'text-gray-600'}`}>
                   Total Files
                 </span>
-                <span className={`text-lg font-bold ${isDarkMode ? 'text-slate-200' : 'text-gray-900'}`}>
+                <span className={`text-xl font-bold ${isDarkMode ? 'text-slate-200' : 'text-gray-900'}`}>
                   {report.files.length}
                 </span>
               </div>
@@ -161,10 +161,10 @@ export default function Sidebar({
                   ? 'bg-slate-900/50 border-slate-800' 
                   : 'bg-gray-100 border-gray-300'
               }`}>
-                <span className={`text-xs ${isDarkMode ? 'text-slate-400' : 'text-gray-600'}`}>
+                <span className={`text-sm ${isDarkMode ? 'text-slate-400' : 'text-gray-600'}`}>
                   Total Findings
                 </span>
-                <span className="text-lg font-bold text-amber-500">
+                <span className="text-xl font-bold text-amber-500">
                   {report.files.reduce((sum, f) => sum + f.findings.length, 0)}
                 </span>
               </div>
@@ -173,7 +173,7 @@ export default function Sidebar({
 
           {/* Risk Level Filters */}
           <div className="space-y-3">
-            <h2 className={`text-sm font-semibold uppercase tracking-wider ${
+            <h2 className={`text-base font-semibold uppercase tracking-wider ${
               isDarkMode ? 'text-slate-400' : 'text-gray-600'
             }`}>
               Filter by Risk
@@ -207,8 +207,8 @@ export default function Sidebar({
                       }
                     `}
                   >
-                    <span className="text-xs font-semibold uppercase">{severity}</span>
-                    <span className="text-sm font-bold">{count}</span>
+                    <span className="text-sm font-semibold uppercase">{severity}</span>
+                    <span className="text-base font-bold">{count}</span>
                   </button>
                 );
               })}
@@ -217,7 +217,7 @@ export default function Sidebar({
 
           {/* Config Type Filters */}
           <div className="space-y-3">
-            <h2 className={`text-sm font-semibold uppercase tracking-wider ${
+            <h2 className={`text-base font-semibold uppercase tracking-wider ${
               isDarkMode ? 'text-slate-400' : 'text-gray-600'
             }`}>
               Filter by Type
@@ -250,11 +250,11 @@ export default function Sidebar({
                       }
                     `}
                   >
-                    <span className="text-xs font-semibold flex items-center gap-2">
-                      <span className="text-base">{icons[type]}</span>
+                    <span className="text-sm font-semibold flex items-center gap-2">
+                      <span className="text-lg">{icons[type]}</span>
                       {type}
                     </span>
-                    <span className="text-sm font-bold">{count}</span>
+                    <span className="text-base font-bold">{count}</span>
                   </button>
                 );
               })}
@@ -269,7 +269,7 @@ export default function Sidebar({
           ? 'border-slate-800 bg-slate-950' 
           : 'border-gray-200 bg-gray-50'
       }`}>
-        <div className={`text-xs text-center ${isDarkMode ? 'text-slate-500' : 'text-gray-600'}`}>
+        <div className={`text-sm text-center ${isDarkMode ? 'text-slate-500' : 'text-gray-600'}`}>
           Powered by <span className="text-cyan-500 font-semibold">Gemini AI</span>
         </div>
       </div>

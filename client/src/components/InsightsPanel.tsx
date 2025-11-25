@@ -43,19 +43,19 @@ export default function InsightsPanel({ selectedFile, isDarkMode }: InsightsPane
         {/* File Header */}
         <div className="space-y-3">
           <div className="flex items-start justify-between gap-3">
-            <h2 className={`text-lg font-semibold break-all leading-tight ${
+            <h2 className={`text-xl font-semibold break-all leading-tight ${
               isDarkMode ? 'text-slate-200' : 'text-gray-900'
             }`}>
               {selectedFile.path.split('/').pop()}
             </h2>
-            <span className="text-2xl flex-shrink-0">
+            <span className="text-3xl flex-shrink-0">
               {selectedFile.configType === 'docker' && '🐳'}
               {selectedFile.configType === 'kubernetes' && '☸️'}
               {selectedFile.configType === 'nginx' && '⚙️'}
             </span>
           </div>
           
-          <div className={`text-xs font-mono break-all ${
+          <div className={`text-sm font-mono break-all ${
             isDarkMode ? 'text-slate-500' : 'text-gray-600'
           }`}>
             {selectedFile.path}
@@ -88,8 +88,8 @@ export default function InsightsPanel({ selectedFile, isDarkMode }: InsightsPane
                 ? 'bg-purple-900/20 border-purple-500/30' 
                 : 'bg-purple-50 border-purple-300'
             }`}>
-              <span className="text-xl">⚙️</span>
-              <h3 className={`text-sm font-semibold uppercase tracking-wider ${
+              <span className="text-2xl">⚙️</span>
+              <h3 className={`text-base font-semibold uppercase tracking-wider ${
                 isDarkMode ? 'text-purple-300' : 'text-purple-700'
               }`}>
                 Rule Engine Findings ({selectedFile.findings.length})
@@ -100,7 +100,7 @@ export default function InsightsPanel({ selectedFile, isDarkMode }: InsightsPane
                 ? 'bg-purple-900/10 border-purple-500/20' 
                 : 'bg-purple-50/50 border-purple-200'
             }`}>
-              <p className={`text-xs mb-3 italic ${isDarkMode ? 'text-slate-400' : 'text-gray-600'}`}>
+              <p className={`text-sm mb-3 italic ${isDarkMode ? 'text-slate-400' : 'text-gray-600'}`}>
                 Deterministic security rules detected the following issues:
               </p>
               <div className="space-y-3">
@@ -115,30 +115,83 @@ export default function InsightsPanel({ selectedFile, isDarkMode }: InsightsPane
                 >
                   {/* Header: Rule ID + Badge */}
                   <div className="flex items-start gap-3">
-                    <code className={`text-xs font-mono flex-1 break-all ${
+                    <code className={`text-sm font-mono flex-1 break-all ${
                       isDarkMode ? 'text-purple-400' : 'text-purple-600'
                     }`}>
                       {finding.id}
                     </code>
                     <div className="flex-shrink-0">
-                      <SeverityBadge severity={finding.severity} size="sm" isDarkMode={isDarkMode} />
+                      <SeverityBadge severity={finding.severity} size="md" isDarkMode={isDarkMode} />
                     </div>
                   </div>
                   
                   {/* Description */}
-                  <p className={`text-sm ${isDarkMode ? 'text-slate-300' : 'text-gray-700'}`}>
+                  <p className={`text-base leading-relaxed ${isDarkMode ? 'text-slate-300' : 'text-gray-700'}`}>
                     {finding.description}
                   </p>
                   
                   {/* Recommendation */}
                   <div className={`pt-2 border-t ${isDarkMode ? 'border-slate-800' : 'border-gray-200'}`}>
-                    <p className={`text-xs ${isDarkMode ? 'text-slate-400' : 'text-gray-600'}`}>
+                    <p className={`text-sm leading-relaxed ${isDarkMode ? 'text-slate-400' : 'text-gray-600'}`}>
                       <span className={`font-semibold ${isDarkMode ? 'text-green-400' : 'text-green-600'}`}>
                         Fix:{' '}
                       </span>
                       {finding.recommendation}
                     </p>
                   </div>
+                  
+                  {/* Standards Badges */}
+                  {(finding.cis || finding.cweId || finding.owasp || finding.nsa) && (
+                    <div className="pt-3 mt-2">
+                      <div className={`text-sm font-semibold uppercase tracking-wider mb-2 ${
+                        isDarkMode ? 'text-slate-500' : 'text-gray-500'
+                      }`}>
+                        Industry Standards
+                      </div>
+                      <div className="flex flex-wrap gap-2">
+                        {finding.cis && (
+                          <span className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium border shadow-sm ${
+                            isDarkMode 
+                              ? 'bg-blue-900/40 text-blue-200 border-blue-500/50' 
+                              : 'bg-blue-50 text-blue-800 border-blue-400'
+                          }`}>
+                            <span className="font-bold">CIS</span>
+                            <span className="opacity-90">{finding.cis.replace('CIS ', '').replace('CIS Docker ', 'D').replace('CIS Nginx ', 'N').replace('CIS ', 'K')}</span>
+                          </span>
+                        )}
+                        {finding.cweId && (
+                          <span className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium border shadow-sm ${
+                            isDarkMode 
+                              ? 'bg-orange-900/40 text-orange-200 border-orange-500/50' 
+                              : 'bg-orange-50 text-orange-800 border-orange-400'
+                          }`}>
+                            <span className="font-bold">CWE</span>
+                            <span className="opacity-90">{finding.cweId.replace('CWE-', '')}</span>
+                          </span>
+                        )}
+                        {finding.owasp && (
+                          <span className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium border shadow-sm ${
+                            isDarkMode 
+                              ? 'bg-emerald-900/40 text-emerald-200 border-emerald-500/50' 
+                              : 'bg-emerald-50 text-emerald-800 border-emerald-400'
+                          }`}>
+                            <span className="font-bold">OWASP</span>
+                            <span className="opacity-90">{finding.owasp.replace('ASVS ', '')}</span>
+                          </span>
+                        )}
+                        {finding.nsa && (
+                          <span className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium border shadow-sm ${
+                            isDarkMode 
+                              ? 'bg-indigo-900/40 text-indigo-200 border-indigo-500/50' 
+                              : 'bg-indigo-50 text-indigo-800 border-indigo-400'
+                          }`}>
+                            <span className="font-bold">NSA</span>
+                            <span className="text-xs opacity-90">K8s</span>
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  )}
                 </div>
                 ))}
               </div>
@@ -155,8 +208,8 @@ export default function InsightsPanel({ selectedFile, isDarkMode }: InsightsPane
               ? 'bg-cyan-900/20 border-cyan-500/30' 
               : 'bg-cyan-50 border-cyan-300'
           }`}>
-            <span className="text-xl">🤖</span>
-            <h3 className={`text-sm font-semibold uppercase tracking-wider ${
+            <span className="text-2xl">🤖</span>
+            <h3 className={`text-base font-semibold uppercase tracking-wider ${
               isDarkMode ? 'text-cyan-300' : 'text-cyan-700'
             }`}>
               AI-Generated Insights
@@ -169,7 +222,7 @@ export default function InsightsPanel({ selectedFile, isDarkMode }: InsightsPane
               ? 'bg-cyan-900/10 border-cyan-500/20' 
               : 'bg-cyan-50/50 border-cyan-200'
           }`}>
-            <p className={`text-xs mb-3 italic ${isDarkMode ? 'text-slate-400' : 'text-gray-600'}`}>
+            <p className={`text-sm mb-3 italic ${isDarkMode ? 'text-slate-400' : 'text-gray-600'}`}>
               Gemini AI analyzed the findings and generated this summary:
             </p>
             <div className={`p-4 rounded-lg border ${
@@ -177,7 +230,7 @@ export default function InsightsPanel({ selectedFile, isDarkMode }: InsightsPane
                 ? 'bg-gradient-to-br from-slate-900 to-slate-800/50 border-slate-700/50' 
                 : 'bg-gradient-to-br from-gray-50 to-white border-gray-300'
             }`}>
-              <p className={`text-sm leading-relaxed ${isDarkMode ? 'text-slate-300' : 'text-gray-700'}`}>
+              <p className={`text-base leading-relaxed ${isDarkMode ? 'text-slate-300' : 'text-gray-700'}`}>
                 {insight.summary}
               </p>
             </div>
@@ -187,8 +240,8 @@ export default function InsightsPanel({ selectedFile, isDarkMode }: InsightsPane
           {insight.suggestions.length > 0 && (
             <div className="space-y-2">
               <div className="flex items-center gap-2 px-2">
-                <span className="text-lg">💡</span>
-                <h4 className={`text-xs font-semibold uppercase tracking-wider ${
+                <span className="text-xl">💡</span>
+                <h4 className={`text-sm font-semibold uppercase tracking-wider ${
                   isDarkMode ? 'text-amber-400' : 'text-amber-600'
                 }`}>
                   AI Recommendations
@@ -205,7 +258,7 @@ export default function InsightsPanel({ selectedFile, isDarkMode }: InsightsPane
                     }`}
                   >
                     <div className="flex gap-3">
-                      <span className={`flex-shrink-0 w-5 h-5 mt-0.5 rounded-full text-xs font-bold 
+                      <span className={`flex-shrink-0 w-6 h-6 mt-0.5 rounded-full text-sm font-bold 
                                        flex items-center justify-center border group-hover:scale-110 transition-transform ${
                         isDarkMode 
                           ? 'bg-amber-500/20 text-amber-400 border-amber-500/30' 
@@ -213,7 +266,7 @@ export default function InsightsPanel({ selectedFile, isDarkMode }: InsightsPane
                       }`}>
                         {idx + 1}
                       </span>
-                      <p className={`text-sm leading-relaxed ${isDarkMode ? 'text-slate-300' : 'text-gray-700'}`}>
+                      <p className={`text-base leading-relaxed ${isDarkMode ? 'text-slate-300' : 'text-gray-700'}`}>
                         {suggestion}
                       </p>
                     </div>

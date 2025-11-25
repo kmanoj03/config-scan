@@ -34,14 +34,14 @@ export default function FiltersBar({
             placeholder="🔍 Search file paths..."
             value={search}
             onChange={(e) => onSearchChange(e.target.value)}
-            className={`w-full px-4 py-2.5 pl-10 rounded-lg transition-all duration-200
+            className={`w-full px-4 py-3 pl-11 text-base rounded-lg transition-all duration-200
                      focus:outline-none focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20 ${
                        isDarkMode
                          ? 'bg-slate-900 border-slate-700 text-slate-200 placeholder-slate-500'
                          : 'bg-white border-gray-300 text-gray-900 placeholder-gray-400'
                      }`}
           />
-          <span className={`absolute left-3 top-1/2 -translate-y-1/2 ${
+          <span className={`absolute left-3 top-1/2 -translate-y-1/2 text-xl ${
             isDarkMode ? 'text-slate-500' : 'text-gray-400'
           }`}>
             🔍
@@ -51,7 +51,7 @@ export default function FiltersBar({
 
       {/* Severity Filters */}
       <div className="flex items-center gap-2">
-        <span className={`text-sm font-medium ${isDarkMode ? 'text-slate-400' : 'text-gray-600'}`}>
+        <span className={`text-base font-medium ${isDarkMode ? 'text-slate-400' : 'text-gray-600'}`}>
           Risk:
         </span>
         {severities.map((sev) => {
@@ -68,7 +68,7 @@ export default function FiltersBar({
               key={sev}
               onClick={() => onSeverityToggle(sev)}
               className={`
-                px-3 py-1 text-xs font-semibold uppercase rounded-full border
+                px-4 py-1.5 text-sm font-semibold uppercase rounded-full border
                 transition-all duration-200 hover:scale-105
                 ${
                   isSelected
@@ -87,7 +87,7 @@ export default function FiltersBar({
 
       {/* Config Type Filters */}
       <div className="flex items-center gap-2">
-        <span className={`text-sm font-medium ${isDarkMode ? 'text-slate-400' : 'text-gray-600'}`}>
+        <span className={`text-base font-medium ${isDarkMode ? 'text-slate-400' : 'text-gray-600'}`}>
           Type:
         </span>
         {configTypes.map((type) => {
@@ -103,7 +103,7 @@ export default function FiltersBar({
               key={type}
               onClick={() => onConfigTypeToggle(type)}
               className={`
-                px-3 py-1 text-xs font-semibold rounded-full border
+                px-4 py-1.5 text-sm font-semibold rounded-full border
                 transition-all duration-200 hover:scale-105
                 ${
                   isSelected
@@ -114,7 +114,7 @@ export default function FiltersBar({
                 }
               `}
             >
-              <span className="mr-1">{icons[type]}</span>
+              <span className="mr-1 text-lg">{icons[type]}</span>
               {type}
             </button>
           );

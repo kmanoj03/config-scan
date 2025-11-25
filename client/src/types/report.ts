@@ -8,6 +8,11 @@ export interface RuleFinding {
   description: string;
   recommendation: string;
   lineHint?: number;
+  // Industry standards mappings
+  cis?: string;
+  cweId?: string;
+  owasp?: string;
+  nsa?: string;
 }
 
 export interface FileReport {
