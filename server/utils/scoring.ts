@@ -1,10 +1,10 @@
 import type { RuleFinding, Severity } from '../models/rule';
 
 const severityScore: Record<Severity, number> = {
-  LOW: 1,
-  MEDIUM: 3,
-  HIGH: 7,
-  CRITICAL: 10,
+  LOW: 0.5,      // Minor issues, cosmetic
+  MEDIUM: 1,     // Best-practice violations
+  HIGH: 3,       // Significant security risks
+  CRITICAL: 5,   // Severe vulnerabilities
 };
 
 export function scoreFindings(findings: RuleFinding[]): {
@@ -34,7 +34,7 @@ export function scoreFindings(findings: RuleFinding[]): {
   }
 
   return {
-    overallScore: totalScore,
+    overallScore: Math.round(totalScore * 10) / 10,  // keep one decimal
     overallRisk: severitiesOrder[maxSeverityIndex],
   };
 }
