@@ -10,8 +10,9 @@ export function classifyFile(filePath: string, content: string): ConfigType | nu
   const basename = path.basename(filePath);
   const ext = path.extname(filePath);
 
-  // Docker: filename is exactly "Dockerfile" (case-insensitive)
-  if (basename.toLowerCase() === 'dockerfile') {
+  // Docker: filename starts with "Dockerfile" (case-insensitive)
+  // Matches: Dockerfile, Dockerfile.dev, Dockerfile.prod, Dockerfile.bad, etc.
+  if (basename.toLowerCase().startsWith('dockerfile')) {
     return 'docker';
   }
 

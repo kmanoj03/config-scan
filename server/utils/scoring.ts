@@ -1,46 +1,40 @@
-import { Severity, RuleFinding } from '../models/rule';
+import type { RuleFinding, Severity } from '../models/rule';
 
-export function severityToScore(severity: Severity): number {
-  switch (severity) {
-    case 'LOW':
-      return 1;
-    case 'MEDIUM':
-      return 3;
-    case 'HIGH':
-      return 7;
-    case 'CRITICAL':
-      return 10;
-    default:
-      return 0;
-  }
-}
+const severityScore: Record<Severity, number> = {
+  LOW: 1,
+  MEDIUM: 3,
+  HIGH: 7,
+  CRITICAL: 10,
+};
 
-export function computeFileRisk(findings: RuleFinding[]): number {
+export function scoreFindings(findings: RuleFinding[]): {
+  overallScore: number;
+  overallRisk: Severity;
+} {
   if (findings.length === 0) {
-    return 0;
+    // Convention: no findings = LOW risk, score 0
+    return {
+      overallScore: 0,
+      overallRisk: 'LOW',
+    };
   }
 
-  const totalScore = findings.reduce((sum, finding) => {
-    return sum + severityToScore(finding.severity);
-  }, 0);
+  const severitiesOrder: Severity[] = ['LOW', 'MEDIUM', 'HIGH', 'CRITICAL'];
 
-  return totalScore;
-}
-
-// Phase 2: Simplified scoring - will be enhanced in later phases
-export function computeFileSeverity(findings: RuleFinding[]): Severity {
-  if (findings.length === 0) {
-    return 'LOW';
-  }
-
-  const severityOrder: Severity[] = ['LOW', 'MEDIUM', 'HIGH', 'CRITICAL'];
-  let maxSeverity: Severity = 'LOW';
+  let maxSeverityIndex = 0;
+  let totalScore = 0;
 
   for (const finding of findings) {
-    if (severityOrder.indexOf(finding.severity) > severityOrder.indexOf(maxSeverity)) {
-      maxSeverity = finding.severity;
+    const idx = severitiesOrder.indexOf(finding.severity);
+    if (idx > maxSeverityIndex) {
+      maxSeverityIndex = idx;
     }
+
+    totalScore += severityScore[finding.severity] ?? 0;
   }
 
-  return maxSeverity;
+  return {
+    overallScore: totalScore,
+    overallRisk: severitiesOrder[maxSeverityIndex],
+  };
 }
