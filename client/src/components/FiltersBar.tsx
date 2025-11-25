@@ -31,7 +31,7 @@ export default function FiltersBar({
         <div className="relative">
           <input
             type="text"
-            placeholder="🔍 Search file paths..."
+            placeholder="Search file paths..."
             value={search}
             onChange={(e) => onSearchChange(e.target.value)}
             className={`w-full px-4 py-3 pl-11 text-base rounded-lg transition-all duration-200
