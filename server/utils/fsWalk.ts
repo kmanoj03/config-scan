@@ -1,7 +1,7 @@
-import { promises as fs } from 'fs';
-import * as path from 'path';
+import fs from 'fs/promises';
+import path from 'path';
 
-export async function walkConfigFiles(rootPath: string): Promise<string[]> {
+export async function findAllFiles(root: string): Promise<string[]> {
   const results: string[] = [];
 
   async function walk(dirPath: string): Promise<void> {
@@ -22,11 +22,16 @@ export async function walkConfigFiles(rootPath: string): Promise<string[]> {
       }
     } catch (error) {
       // Skip directories we can't read
-      console.warn(`Warning: Could not read directory ${dirPath}:`, error);
+      console.warn(`Warning: Could not read directory ${dirPath}`);
     }
   }
 
-  await walk(rootPath);
+  try {
+    await walk(root);
+  } catch (error) {
+    // If root doesn't exist or can't be read, return empty array
+    console.warn(`Warning: Could not access root path ${root}`);
+  }
+
   return results;
 }
-

@@ -1,28 +1,33 @@
-export type ConfigType = 'docker' | 'kubernetes' | 'nginx' | 'unknown';
+import path from 'path';
+import type { ConfigType } from '../models/rule';
 
-export function classifyConfig(path: string, content: string): ConfigType {
-  // Normalize path and content for case-insensitive comparisons
-  const lowerPath = path.toLowerCase();
-  const lowerContent = content.toLowerCase();
+export interface ClassifiedConfigFile {
+  path: string;
+  configType: ConfigType;
+}
 
-  // Check for Dockerfile
-  if (lowerPath.includes('dockerfile')) {
+export function classifyFile(filePath: string, content: string): ConfigType | null {
+  const basename = path.basename(filePath);
+  const ext = path.extname(filePath);
+
+  // Docker: filename is exactly "Dockerfile" (case-insensitive)
+  if (basename.toLowerCase() === 'dockerfile') {
     return 'docker';
   }
 
-  // Check for Kubernetes
-  if (
-    lowerPath.includes('k8s') ||
-    (content.includes('apiVersion:') && content.includes('kind:'))
-  ) {
+  // Kubernetes: .yaml/.yml extension + contains "apiVersion:" and "kind:"
+  if ((ext === '.yaml' || ext === '.yml') && 
+      content.includes('apiVersion:') && 
+      content.includes('kind:')) {
     return 'kubernetes';
   }
 
-  // Check for Nginx
-  if (path.endsWith('.conf') && lowerContent.includes('server {')) {
+  // Nginx: filename is nginx.conf OR .conf extension + contains "server {"
+  if (basename === 'nginx.conf' || 
+      (ext === '.conf' && content.includes('server {'))) {
     return 'nginx';
   }
 
-  return 'unknown';
+  // Not a config file we care about
+  return null;
 }
-

@@ -1,23 +1,21 @@
-import { RuleFinding, Severity } from './rule';
+import type { ConfigType, RuleFinding, Severity } from './rule';
 
 export interface FileReport {
   path: string;
-  configType: string;
+  configType: ConfigType;
   findings: RuleFinding[];
-  riskScore: number;
+  overallScore: number;
+  overallRisk: Severity;
 }
 
-export interface OverallReport {
-  rootPath: string;
+export interface ScanReport {
   files: FileReport[];
-  totalFindings: number;
-  maxSeverity: Severity | null;
-  overallRiskScore: number;
+  scannedAt: string;
 }
 
+// For later phases
 export interface LlmInsight {
   summary: string;
   keyRisks: string[];
   recommendations: string[];
 }
-

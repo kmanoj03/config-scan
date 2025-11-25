@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "tsx watch server.ts",
     "build": "tsc -p .",
-    "start": "node dist/server/server.js"
+    "start": "node dist/server.js"
   },
   "keywords": [],
   "author": "",

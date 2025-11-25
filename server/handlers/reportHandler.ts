@@ -1,16 +1,8 @@
-import { FileReport, OverallReport } from '../models/report';
-import { computeOverallReport } from '../utils/scoring';
+import { ScanReport } from '../models/report';
 
 export type ReportFormat = 'console' | 'json' | 'markdown';
 
-export function buildOverallReport(
-  rootPath: string,
-  files: FileReport[]
-): OverallReport {
-  return computeOverallReport(rootPath, files);
-}
-
-export function printReport(report: OverallReport, format: ReportFormat): void {
+export function printReport(report: ScanReport, format: ReportFormat): void {
   switch (format) {
     case 'console':
       printConsoleReport(report);
@@ -26,22 +18,29 @@ export function printReport(report: OverallReport, format: ReportFormat): void {
   }
 }
 
-function printConsoleReport(report: OverallReport): void {
+function printConsoleReport(report: ScanReport): void {
   console.log('\n=== Config Scan Report ===');
-  console.log(`Root Path: ${report.rootPath}`);
   console.log(`Files Scanned: ${report.files.length}`);
-  console.log(`Total Findings: ${report.totalFindings}`);
-  console.log(`Max Severity: ${report.maxSeverity || 'None'}`);
-  console.log(`Overall Risk Score: ${report.overallRiskScore}`);
+  console.log(`Scanned at: ${report.scannedAt}`);
+  
+  if (report.files.length > 0) {
+    console.log('\nConfig files:');
+    for (const file of report.files) {
+      console.log(`- [${file.configType}] ${file.path}`);
+    }
+  }
   console.log('==========================\n');
 }
 
-function printMarkdownReport(report: OverallReport): void {
+function printMarkdownReport(report: ScanReport): void {
   console.log('# Config Scan Report\n');
-  console.log(`**Root Path:** ${report.rootPath}\n`);
   console.log(`**Files Scanned:** ${report.files.length}\n`);
-  console.log(`**Total Findings:** ${report.totalFindings}\n`);
-  console.log(`**Max Severity:** ${report.maxSeverity || 'None'}\n`);
-  console.log(`**Overall Risk Score:** ${report.overallRiskScore}\n`);
+  console.log(`**Scanned at:** ${report.scannedAt}\n`);
+  
+  if (report.files.length > 0) {
+    console.log('## Config Files\n');
+    for (const file of report.files) {
+      console.log(`- **[${file.configType}]** ${file.path}`);
+    }
+  }
 }
-

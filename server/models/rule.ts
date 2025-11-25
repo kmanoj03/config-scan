@@ -1,26 +1,21 @@
 export type Severity = 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
 
+export type ConfigType = 'docker' | 'kubernetes' | 'nginx';
+
 export interface RuleContext {
   raw: string;            // entire file content
   lines: string[];        // file content split by line
   path: string;           // file path
-  configType: string;     // e.g. 'docker', 'kubernetes', 'nginx', 'unknown'
+  configType: ConfigType;
 }
 
 export interface RuleFinding {
   id: string;             // rule ID, e.g. 'DOCKER_001'
-  configType: string;
+  configType: ConfigType;
   severity: Severity;
   description: string;
   recommendation: string;
-  line?: number;
+  lineHint?: number;
 }
 
-export interface Rule {
-  id: string;
-  description: string;
-  severity: Severity;
-  appliesTo(configType: string): boolean;
-  run(context: RuleContext): RuleFinding[];
-}
-
+export type Rule = (ctx: RuleContext) => RuleFinding[];
