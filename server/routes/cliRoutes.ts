@@ -1,5 +1,15 @@
 import { Command } from 'commander';
+import path from 'path';
+import fs from 'fs/promises';
 import { scanPath } from '../handlers/scanHandler';
+import { printConsole, writeJson, writeMarkdown } from '../handlers/reportHandler';
+
+type OutputFormat = 'console' | 'json' | 'md' | 'all';
+
+interface CliOptions {
+  format?: OutputFormat;
+  out?: string;
+}
 
 export function runCli(): void {
   const program = new Command();
@@ -8,36 +18,52 @@ export function runCli(): void {
     .name('config-scan')
     .description('Scan a directory for config files (docker, kubernetes, nginx) and run security rules.')
     .argument('[path]', 'Root path to scan', '.')
-    .action(async (pathArg: string) => {
+    .option(
+      '--format <format>',
+      'Output format: console | json | md | all',
+      'console'
+    )
+    .option(
+      '--out <dir>',
+      'Output directory for JSON/Markdown reports (when format is json/md/all)',
+      './reports'
+    )
+    .action(async (pathArg: string, options: CliOptions) => {
+      const format = (options.format ?? 'console') as OutputFormat;
+      const outDir = options.out ?? './reports';
+
       try {
         const report = await scanPath(pathArg);
 
-        const files = report.files;
-        const totalConfigs = files.length;
-        const totalFindings = files.reduce((sum, f) => sum + f.findings.length, 0);
+        // Always show console when format includes console or all
+        if (format === 'console' || format === 'all') {
+          printConsole(report);
+        }
 
-        console.log(`Scanned path: ${pathArg}`);
-        console.log(`Detected ${totalConfigs} config file(s).`);
-        console.log(`Total findings: ${totalFindings}`);
-        console.log(`Scanned at: ${report.scannedAt}`);
-        console.log('');
+        // If JSON or ALL selected, ensure directory and write JSON
+        if (format === 'json' || format === 'all') {
+          await fs.mkdir(outDir, { recursive: true });
 
-        for (const file of files) {
-          console.log(`File: ${file.path}`);
-          console.log(`  Type: ${file.configType}`);
-          console.log(`  Overall risk: ${file.overallRisk}`);
-          console.log(`  Overall score: ${file.overallScore}`);
-          console.log(`  Findings: ${file.findings.length}`);
+          const timestamp = new Date()
+            .toISOString()
+            .replace(/[:.]/g, '-');
+          const jsonPath = path.join(outDir, `report-${timestamp}.json`);
 
-          for (const finding of file.findings) {
-            console.log(`    - [${finding.severity}] ${finding.id}: ${finding.description}`);
-            if (finding.lineHint !== undefined) {
-              console.log(`      Line: ${finding.lineHint}`);
-            }
-            console.log(`      Recommendation: ${finding.recommendation}`);
-          }
+          await writeJson(report, jsonPath);
+          console.log(`JSON report written to: ${jsonPath}`);
+        }
 
-          console.log('');
+        // If MD or ALL selected, ensure directory and write Markdown
+        if (format === 'md' || format === 'all') {
+          await fs.mkdir(outDir, { recursive: true });
+
+          const timestamp = new Date()
+            .toISOString()
+            .replace(/[:.]/g, '-');
+          const mdPath = path.join(outDir, `report-${timestamp}.md`);
+
+          await writeMarkdown(report, mdPath);
+          console.log(`Markdown report written to: ${mdPath}`);
         }
       } catch (err) {
         console.error('Error during scan:', err);

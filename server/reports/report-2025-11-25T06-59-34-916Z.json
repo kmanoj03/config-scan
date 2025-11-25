@@ -1,0 +1,65 @@
+{
+  "files": [
+    {
+      "path": "examples/Dockerfile.bad",
+      "configType": "docker",
+      "findings": [
+        {
+          "id": "DOCKER_LATEST_TAG",
+          "configType": "docker",
+          "severity": "HIGH",
+          "description": "Docker image uses the 'latest' tag.",
+          "recommendation": "Pin a specific version tag instead of 'latest' to ensure reproducible builds.",
+          "lineHint": 1
+        },
+        {
+          "id": "DOCKER_MISSING_USER",
+          "configType": "docker",
+          "severity": "MEDIUM",
+          "description": "Dockerfile does not specify a USER and will run as root by default.",
+          "recommendation": "Add a non-root USER to reduce the impact of a container compromise."
+        }
+      ],
+      "overallScore": 10,
+      "overallRisk": "HIGH"
+    },
+    {
+      "path": "examples/deployment-bad.yaml",
+      "configType": "kubernetes",
+      "findings": [
+        {
+          "id": "K8S_PRIVILEGED_CONTAINER",
+          "configType": "kubernetes",
+          "severity": "HIGH",
+          "description": "One or more containers are running in privileged mode.",
+          "recommendation": "Avoid privileged containers; use fine-grained capabilities instead."
+        }
+      ],
+      "overallScore": 7,
+      "overallRisk": "HIGH"
+    },
+    {
+      "path": "examples/nginx-bad.conf",
+      "configType": "nginx",
+      "findings": [
+        {
+          "id": "NGINX_SERVER_TOKENS_ON",
+          "configType": "nginx",
+          "severity": "MEDIUM",
+          "description": "Nginx is configured with 'server_tokens on', exposing version info.",
+          "recommendation": "Set 'server_tokens off;' to avoid leaking Nginx version information in responses."
+        },
+        {
+          "id": "NGINX_MISSING_SSL_PROTOCOLS",
+          "configType": "nginx",
+          "severity": "MEDIUM",
+          "description": "TLS is configured without explicitly setting 'ssl_protocols'.",
+          "recommendation": "Set 'ssl_protocols TLSv1.2 TLSv1.3;' (or your org's policy) to avoid weak protocols."
+        }
+      ],
+      "overallScore": 6,
+      "overallRisk": "MEDIUM"
+    }
+  ],
+  "scannedAt": "2025-11-25T06:59:34.915Z"
+}
