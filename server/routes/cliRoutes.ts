@@ -6,24 +6,39 @@ export function runCli(): void {
 
   program
     .name('config-scan')
-    .description('Scan a directory for config files and classify them (docker, kubernetes, nginx).')
+    .description('Scan a directory for config files (docker, kubernetes, nginx) and run security rules.')
     .argument('[path]', 'Root path to scan', '.')
     .action(async (pathArg: string) => {
       try {
         const report = await scanPath(pathArg);
-        const count = report.files.length;
+
+        const files = report.files;
+        const totalConfigs = files.length;
+        const totalFindings = files.reduce((sum, f) => sum + f.findings.length, 0);
 
         console.log(`Scanned path: ${pathArg}`);
-        console.log(`Detected ${count} config file(s).`);
-
-        if (count > 0) {
-          console.log('Config files:');
-          for (const file of report.files) {
-            console.log(`- [${file.configType}] ${file.path}`);
-          }
-        }
-
+        console.log(`Detected ${totalConfigs} config file(s).`);
+        console.log(`Total findings: ${totalFindings}`);
         console.log(`Scanned at: ${report.scannedAt}`);
+        console.log('');
+
+        for (const file of files) {
+          console.log(`File: ${file.path}`);
+          console.log(`  Type: ${file.configType}`);
+          console.log(`  Overall risk: ${file.overallRisk}`);
+          console.log(`  Overall score: ${file.overallScore}`);
+          console.log(`  Findings: ${file.findings.length}`);
+
+          for (const finding of file.findings) {
+            console.log(`    - [${finding.severity}] ${finding.id}: ${finding.description}`);
+            if (finding.lineHint !== undefined) {
+              console.log(`      Line: ${finding.lineHint}`);
+            }
+            console.log(`      Recommendation: ${finding.recommendation}`);
+          }
+
+          console.log('');
+        }
       } catch (err) {
         console.error('Error during scan:', err);
         process.exitCode = 1;
