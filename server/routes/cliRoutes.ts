@@ -3,12 +3,14 @@ import path from 'path';
 import fs from 'fs/promises';
 import { scanPath } from '../handlers/scanHandler';
 import { printConsole, writeJson, writeMarkdown } from '../handlers/reportHandler';
+import { enrichReportWithLlm } from '../handlers/llmHandler';
 
 type OutputFormat = 'console' | 'json' | 'md' | 'all';
 
 interface CliOptions {
   format?: OutputFormat;
   out?: string;
+  llm?: boolean;
 }
 
 export function runCli(): void {
@@ -28,12 +30,23 @@ export function runCli(): void {
       'Output directory for JSON/Markdown reports (when format is json/md/all)',
       './reports'
     )
+    .option(
+      '--llm',
+      'Enrich report with LLM insights using Google Gemini (requires GOOGLE_API_KEY)',
+      false
+    )
     .action(async (pathArg: string, options: CliOptions) => {
       const format = (options.format ?? 'console') as OutputFormat;
       const outDir = options.out ?? './reports';
+      const useLlm = options.llm ?? false;
 
       try {
-        const report = await scanPath(pathArg);
+        let report = await scanPath(pathArg);
+
+        // Enrich with LLM if requested
+        if (useLlm) {
+          report = await enrichReportWithLlm(report);
+        }
 
         // Always show console when format includes console or all
         if (format === 'console' || format === 'all') {
@@ -44,8 +57,9 @@ export function runCli(): void {
         if (format === 'json' || format === 'all') {
           await fs.mkdir(outDir, { recursive: true });
 
-          // Use deterministic name for CI & tooling
-          const jsonPath = path.join(outDir, 'report.json');
+          // Use deterministic name for CI & tooling (LLM gets different filename)
+          const jsonFilename = useLlm ? 'report-llm.json' : 'report.json';
+          const jsonPath = path.join(outDir, jsonFilename);
 
           await writeJson(report, jsonPath);
           console.log(`JSON report written to: ${jsonPath}`);
