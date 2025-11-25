@@ -1,0 +1,47 @@
+name: Config Security Scan
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  config-scan:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        working-directory: ./server
+        run: npm install
+
+      - name: Build project
+        working-directory: ./server
+        run: npm run build
+
+      - name: Run config-scan (JSON report)
+        working-directory: ./server
+        run: |
+          node dist/server.js . --format=json --out=./reports
+
+      - name: Enforce HIGH/CRITICAL blocking
+        working-directory: ./server
+        run: |
+          node dist/utils/ciCheck.js ./reports/report.json
+
+      - name: Upload scan report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: config-scan-report
+          path: server/reports/report.json
+          retention-days: 30
+

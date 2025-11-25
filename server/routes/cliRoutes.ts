@@ -44,10 +44,8 @@ export function runCli(): void {
         if (format === 'json' || format === 'all') {
           await fs.mkdir(outDir, { recursive: true });
 
-          const timestamp = new Date()
-            .toISOString()
-            .replace(/[:.]/g, '-');
-          const jsonPath = path.join(outDir, `report-${timestamp}.json`);
+          // Use deterministic name for CI & tooling
+          const jsonPath = path.join(outDir, 'report.json');
 
           await writeJson(report, jsonPath);
           console.log(`JSON report written to: ${jsonPath}`);
