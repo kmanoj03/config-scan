@@ -30,7 +30,7 @@ jobs:
       - name: Run config-scan (JSON report)
         working-directory: ./server
         run: |
-          node dist/server.js . --format=json --out=./reports
+          node dist/server.js .. --format=json --out=./reports
 
       - name: Enforce HIGH/CRITICAL blocking
         working-directory: ./server
