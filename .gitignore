@@ -2,6 +2,8 @@
 node_modules/
 dist/
 build/
+client/dist/
+client/public/report-llm.json
 
 # Logs
 logs/

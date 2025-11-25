@@ -47,8 +47,52 @@ Arguments:
 Options:
   --format <format>   Output format: console | json | md | all (default: "console")
   --out <dir>         Output directory for reports (default: "./reports")
+  --llm               Enrich report with AI insights using Google Gemini (NEW!)
   -h, --help          Display help
 ```
+
+### 🤖 AI-Powered Insights (Phase 8 - NEW!)
+
+Generate AI-enhanced reports with Google Gemini:
+
+```bash
+# 1. Set up your API key
+cd server
+echo "GOOGLE_API_KEY=your_key_here" > .env
+
+# 2. Run scan with LLM enrichment
+node server/dist/server.js . --llm --format=json --out=./reports  
+
+# This generates report-llm.json with:
+# - Executive summary of overall security posture
+# - Per-file AI analysis and recommendations
+# - Actionable remediation steps
+```
+
+**Note**: Get your free API key at https://aistudio.google.com/app/apikey
+
+### 📊 Web Dashboard
+
+Visualize scan results with the beautiful React dashboard:
+
+```bash
+cd client
+
+# First time setup
+npm install
+
+# Sync latest report
+npm run sync-report
+
+# Start dashboard
+npm run dev
+```
+
+Open http://localhost:3000 to explore:
+- 🎯 Interactive filters (severity, config type, search)
+- 📁 Visual file cards with risk indicators
+- ✨ AI insights panel with smart recommendations
+- 📈 Real-time statistics and trends
 
 ## Output Formats
 
