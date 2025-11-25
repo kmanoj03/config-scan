@@ -208,6 +208,79 @@ The `ciCheck.js` script exits with:
 - **Exit code 0**: No HIGH/CRITICAL findings (build passes)
 - **Exit code 1**: HIGH/CRITICAL findings detected (build fails)
 
+### 🔒 GitHub Branch Protection & Ruleset Enforcement
+
+This repository uses GitHub Rulesets to enforce secure development practices and ensure that no insecure configuration changes are merged into main.
+
+#### 🚧 Branch Protection Overview
+
+The following protections are enforced on the main branch:
+
+**Require Pull Request Before Merging**
+- Direct pushes to main are blocked. All changes must come through PRs.
+
+**Require Status Checks to Pass**
+- The `config-scan` GitHub Actions workflow must succeed before a PR can be merged.
+- Required Status Check: `config-scan` (GitHub Actions)
+
+**Block Force Pushes**
+- Prevents bypassing or overwriting protected history.
+
+#### 🔄 How It Works in Practice
+
+**1. Pushing to main is rejected**
+
+Attempting a direct push results in:
+```
+remote: error: GH013: Repository rule violations found.
+- Changes must be made through a pull request.
+- Required status check "config-scan" is expected.
+```
+
+This ensures nothing hits production without scanning.
+
+**2. Feature branches work normally**
+
+Branches such as:
+- `feature/new-rule`
+- `fix-classifier`
+- `bad-config`
+
+can be pushed freely, because the ruleset targets only main.
+
+**3. Opening a Pull Request triggers the scan**
+
+When a PR is opened:
+- GitHub automatically starts the `config-scan` workflow
+- UI shows: "Some checks haven't completed yet"
+- GitHub cannot disable the merge button while checks are running, but…
+
+**4. ❌ If the scan fails → Merge is blocked**
+
+Once the check completes and fails:
+- "All checks have failed"
+- The merge button is disabled
+- PR cannot be merged until issues are fixed
+
+This ensures insecure configuration changes can never reach main.
+
+**5. ✅ If scan passes → Merge is allowed**
+
+When the scan reports ZERO HIGH/CRITICAL findings:
+- Check passes ✅
+- PR becomes mergeable
+- Ruleset validates both code integrity and configuration security
+
+#### 📁 Example Recommended Workflow
+
+1. Create a new branch
+2. Commit changes
+3. Push branch
+4. Open PR to main
+5. Wait for config-scan to finish
+6. Fix issues if workflow fails
+7. Merge only when scan is green ✅
+
 ## Development
 
 ```bash
