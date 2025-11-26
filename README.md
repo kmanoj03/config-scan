@@ -34,6 +34,9 @@ npm start ./examples --format=json --out=./reports
 
 # Generate all formats (console + JSON + Markdown)
 npm start ./examples --format=all --out=./reports
+
+# Scan entire repository with all formats from root repo
+node dist/server.js .. --format=all --out=./reports 
 ```
 
 ### Command-Line Options
